@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import TodoItem from './TodoItem'
 
 const STORAGE_KEY = 'todos'
 
@@ -92,7 +93,6 @@ function App() {
     if (error) setError('')
   }
 
-  // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
     <div className="app">
       <h1>My Todo List</h1>
@@ -137,23 +137,12 @@ function App() {
           </p>
         )}
         {filteredTodos.map((todo) => (
-          <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            <input 
-              type="checkbox"
-              checked={todo.completed}
-              aria-label={todo.text}
-              onChange={() => toggleTodo(todo.id)}
-            />
-            {/* Issue 15: Potential XSS jika text dari user input */}
-            <span>{todo.text}</span>
-            <button
-              className="delete-btn"
-              aria-label={`Delete "${todo.text}"`}
-              onClick={() => deleteTodo(todo.id)}
-            >
-              Delete
-            </button>
-          </div>
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+          />
         ))}
       </div>
       
