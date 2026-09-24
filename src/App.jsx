@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 
 const STORAGE_KEY = 'todos'
 
@@ -54,8 +54,7 @@ function App() {
     ))
   }, [])
   
-  // Issue 8: Logic filtering yang bisa dipindah ke useMemo
-  const getFilteredTodos = () => {
+  const filteredTodos = useMemo(() => {
     if (filter === 'active') {
       return todos.filter(todo => !todo.completed)
     }
@@ -63,14 +62,16 @@ function App() {
       return todos.filter(todo => todo.completed)
     }
     return todos
-  }
+  }, [todos, filter])
   
-  // Issue 9: Calculation yang tidak perlu di setiap render
-  const stats = {
-    total: todos.length,
-    completed: todos.filter(t => t.completed).length,
-    active: todos.filter(t => !t.completed).length
-  }
+  const stats = useMemo(() => {
+    const completed = todos.filter(todo => todo.completed).length
+    return {
+      total: todos.length,
+      completed,
+      active: todos.length - completed
+    }
+  }, [todos])
   
   // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
@@ -117,7 +118,7 @@ function App() {
       
       <div className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
-        {getFilteredTodos().map((todo) => (
+        {filteredTodos.map((todo) => (
           <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
             <input 
               type="checkbox"
