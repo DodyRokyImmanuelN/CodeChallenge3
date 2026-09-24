@@ -24,6 +24,7 @@ function App() {
   const [todos, setTodos] = useState(loadTodos)
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('all')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     try {
@@ -34,20 +35,22 @@ function App() {
   }, [todos])
 
   const addTodo = useCallback(() => {
-    if (input.trim() === '') {
-      alert('Please enter a todo')
+    const text = input.trim()
+    if (text === '') {
+      setError('Please enter a todo')
       return
     }
 
     const newTodo = {
       id: crypto.randomUUID(),
-      text: input,
+      text,
       completed: false,
       createdAt: new Date().toISOString()
     }
 
     setTodos(prev => [...prev, newTodo])
     setInput('')
+    setError('')
   }, [input])
   
   const deleteTodo = useCallback((id) => {
@@ -84,6 +87,11 @@ function App() {
     addTodo()
   }
 
+  const handleInputChange = (e) => {
+    setInput(e.target.value)
+    if (error) setError('')
+  }
+
   // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
     <div className="app">
@@ -93,12 +101,20 @@ function App() {
         <input
           type="text"
           aria-label="New todo"
+          aria-invalid={error !== ''}
+          aria-describedby={error ? 'todo-error' : undefined}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange}
           placeholder="What needs to be done?"
         />
         <button type="submit">Add</button>
       </form>
+
+      {error && (
+        <p id="todo-error" className="error-message" role="alert">
+          {error}
+        </p>
+      )}
 
       <div className="filters" role="group" aria-label="Filter todos">
         {FILTERS.map(({ value, label }) => (
