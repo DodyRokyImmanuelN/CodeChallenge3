@@ -122,7 +122,7 @@ function App() {
               onChange={() => toggleTodo(todo.id)}
             />
             {/* Issue 15: Potential XSS jika text dari user input */}
-            <span dangerouslySetInnerHTML={{ __html: todo.text }} />
+            <span>{todo.text}</span>
             <button 
               className="delete-btn"
               onClick={() => deleteTodo(todo.id)}
