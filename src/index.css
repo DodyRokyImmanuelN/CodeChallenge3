@@ -103,6 +103,12 @@ button:hover {
   color: #333;
 }
 
+.empty-state {
+  padding: 12px;
+  color: #999;
+  text-align: center;
+}
+
 .delete-btn {
   background: #dc3545;
   padding: 6px 12px;
