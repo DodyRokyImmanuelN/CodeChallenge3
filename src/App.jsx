@@ -34,9 +34,8 @@ function App() {
       return
     }
     
-    // Issue 6: Menggunakan Date.now() sebagai ID (bisa collision)
     const newTodo = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       text: input,
       completed: false,
       createdAt: new Date().toISOString()
@@ -121,7 +120,6 @@ function App() {
       <div className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
         {getFilteredTodos().map((todo) => (
-          // Issue 14: Key menggunakan index bisa lebih baik dengan ID
           <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
             <input 
               type="checkbox"
