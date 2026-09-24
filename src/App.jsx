@@ -79,27 +79,27 @@ function App() {
     }
   }, [todos])
   
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    addTodo()
+  }
+
   // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
     <div className="app">
       <h1>My Todo List</h1>
-      
+
       {/* Issue 11: Tidak ada label untuk accessibility */}
-      <div className="input-section">
-        <input 
+      <form className="input-section" onSubmit={handleSubmit}>
+        <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              addTodo()
-            }
-          }}
           placeholder="What needs to be done?"
         />
-        <button onClick={addTodo}>Add</button>
-      </div>
-      
+        <button type="submit">Add</button>
+      </form>
+
       <div className="filters">
         {FILTERS.map(({ value, label }) => (
           <button
@@ -111,7 +111,7 @@ function App() {
           </button>
         ))}
       </div>
-      
+
       <div className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
         {filteredTodos.map((todo) => (
