@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const STORAGE_KEY = 'todos'
 
@@ -27,34 +27,32 @@ function App() {
     }
   }, [todos])
 
-  // Issue 5: Function yang tidak di-memoize, re-create setiap render
-  const addTodo = () => {
+  const addTodo = useCallback(() => {
     if (input.trim() === '') {
       alert('Please enter a todo')
       return
     }
-    
+
     const newTodo = {
       id: crypto.randomUUID(),
       text: input,
       completed: false,
       createdAt: new Date().toISOString()
     }
-    
-    setTodos([...todos, newTodo])
+
+    setTodos(prev => [...prev, newTodo])
     setInput('')
-  }
+  }, [input])
   
-  // Issue 7: Tidak ada error handling
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id))
-  }
-  
-  const toggleTodo = (id) => {
-    setTodos(todos.map(todo => 
+  const deleteTodo = useCallback((id) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id))
+  }, [])
+
+  const toggleTodo = useCallback((id) => {
+    setTodos(prev => prev.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
-  }
+  }, [])
   
   // Issue 8: Logic filtering yang bisa dipindah ke useMemo
   const getFilteredTodos = () => {
