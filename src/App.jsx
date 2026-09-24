@@ -2,6 +2,12 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 
 const STORAGE_KEY = 'todos'
 
+const FILTERS = [
+  { value: 'all', label: 'All' },
+  { value: 'active', label: 'Active' },
+  { value: 'completed', label: 'Completed' }
+]
+
 function loadTodos() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -94,26 +100,16 @@ function App() {
         <button onClick={addTodo}>Add</button>
       </div>
       
-      {/* Issue 12: Inline styles (inconsistent dengan CSS file) */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <button 
-          onClick={() => setFilter('all')}
-          style={{ background: filter === 'all' ? '#28a745' : '#007bff' }}
-        >
-          All
-        </button>
-        <button 
-          onClick={() => setFilter('active')}
-          style={{ background: filter === 'active' ? '#28a745' : '#007bff' }}
-        >
-          Active
-        </button>
-        <button 
-          onClick={() => setFilter('completed')}
-          style={{ background: filter === 'completed' ? '#28a745' : '#007bff' }}
-        >
-          Completed
-        </button>
+      <div className="filters">
+        {FILTERS.map(({ value, label }) => (
+          <button
+            key={value}
+            className={`filter-btn ${filter === value ? 'selected' : ''}`}
+            onClick={() => setFilter(value)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
       
       <div className="todo-list">
