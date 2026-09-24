@@ -89,10 +89,10 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
 
-      {/* Issue 11: Tidak ada label untuk accessibility */}
       <form className="input-section" onSubmit={handleSubmit}>
         <input
           type="text"
+          aria-label="New todo"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="What needs to be done?"
@@ -100,11 +100,13 @@ function App() {
         <button type="submit">Add</button>
       </form>
 
-      <div className="filters">
+      <div className="filters" role="group" aria-label="Filter todos">
         {FILTERS.map(({ value, label }) => (
           <button
             key={value}
+            type="button"
             className={`filter-btn ${filter === value ? 'selected' : ''}`}
+            aria-pressed={filter === value}
             onClick={() => setFilter(value)}
           >
             {label}
@@ -119,12 +121,14 @@ function App() {
             <input 
               type="checkbox"
               checked={todo.completed}
+              aria-label={todo.text}
               onChange={() => toggleTodo(todo.id)}
             />
             {/* Issue 15: Potential XSS jika text dari user input */}
             <span>{todo.text}</span>
-            <button 
+            <button
               className="delete-btn"
+              aria-label={`Delete "${todo.text}"`}
               onClick={() => deleteTodo(todo.id)}
             >
               Delete
@@ -133,7 +137,7 @@ function App() {
         ))}
       </div>
       
-      <div className="stats">
+      <div className="stats" aria-live="polite">
         <p>Total: {stats.total} | Active: {stats.active} | Completed: {stats.completed}</p>
       </div>
     </div>
