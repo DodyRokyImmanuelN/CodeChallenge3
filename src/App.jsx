@@ -63,7 +63,7 @@ function App() {
     setInput('')
     setError('')
   }, [input])
-  
+
   const deleteTodo = useCallback((id) => {
     setTodos(prev => prev.filter(todo => todo.id !== id))
   }, [])
@@ -73,7 +73,7 @@ function App() {
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
   }, [])
-  
+
   const filteredTodos = useMemo(() => {
     if (filter === 'active') {
       return todos.filter(todo => !todo.completed)
@@ -83,7 +83,7 @@ function App() {
     }
     return todos
   }, [todos, filter])
-  
+
   const stats = useMemo(() => {
     const completed = todos.filter(todo => todo.completed).length
     return {
@@ -92,7 +92,7 @@ function App() {
       active: todos.length - completed
     }
   }, [todos])
-  
+
   const handleSubmit = (e) => {
     e.preventDefault()
     addTodo()
@@ -155,7 +155,7 @@ function App() {
           />
         ))}
       </div>
-      
+
       <div className="stats" aria-live="polite">
         <p>Total: {stats.total} | Active: {stats.active} | Completed: {stats.completed}</p>
       </div>
