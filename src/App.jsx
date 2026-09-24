@@ -9,12 +9,22 @@ const FILTERS = [
   { value: 'completed', label: 'Completed' }
 ]
 
+function isValidTodo(todo) {
+  return (
+    todo !== null &&
+    typeof todo === 'object' &&
+    (typeof todo.id === 'string' || typeof todo.id === 'number') &&
+    typeof todo.text === 'string' &&
+    typeof todo.completed === 'boolean'
+  )
+}
+
 function loadTodos() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (!saved) return []
     const parsed = JSON.parse(saved)
-    return Array.isArray(parsed) ? parsed : []
+    return Array.isArray(parsed) ? parsed.filter(isValidTodo) : []
   } catch (error) {
     console.error('Failed to load todos from localStorage:', error)
     return []
